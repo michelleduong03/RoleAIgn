@@ -1,8 +1,18 @@
 import express from "express";
 import OpenAI from "openai";
+import fetch from "node-fetch";
+if (!globalThis.fetch) {
+  globalThis.fetch = fetch;
+}
+import dotenv from "dotenv";
+dotenv.config();
+
 
 const router = express.Router();
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  fetch
+});
 
 router.post("/", async (req, res) => {
   try {
@@ -24,7 +34,7 @@ router.post("/", async (req, res) => {
     `;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
     });
 
